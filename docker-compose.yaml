@@ -1,5 +1,6 @@
 services:
   sina:
+    image: sina
     restart: always
     labels:
       - traefik.enable=true
