@@ -6,8 +6,9 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm install
+RUN npm i -g serve
 
 COPY . .
-
-EXPOSE 5173
-CMD ["npm", "run", "dev"]
+RUN npm run build
+EXPOSE 3000
+CMD [ "serve", "-s", "dist", "-l", "3000" ]

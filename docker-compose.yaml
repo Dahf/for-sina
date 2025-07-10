@@ -8,7 +8,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.sina.entrypoints=web,websecure
-      - traefik.http.services.sina.loadbalancer.server.port=5173
+      - traefik.http.services.sina.loadbalancer.server.port=3000
       - traefik.http.routers.sina.rule=Host(`sina.silasbeckmann.de`)
       - traefik.http.routers.sina.tls=true
       - traefik.docker.network=traefik_proxy-net
