@@ -1,5 +1,8 @@
 services:
   sina:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: sina
     restart: always
     labels:
