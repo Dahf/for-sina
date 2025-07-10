@@ -1,0 +1,27 @@
+services:
+  sina:
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sina.entrypoints=web,websecure
+      - traefik.http.services.sina.loadbalancer.server.port=5173
+      - traefik.http.routers.sina.rule=Host(`sina.silasbeckmann.de`)
+      - traefik.http.routers.sina.tls=true
+      - traefik.docker.network=traefik_proxy-net
+      - traefik.http.middlewares.sina.headers.SSLRedirect=true
+      - traefik.http.middlewares.sina.headers.STSSeconds=315360000
+      - traefik.http.middlewares.sina.headers.browserXSSFilter=true
+      - traefik.http.middlewares.sina.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.sina.headers.forceSTSHeader=true
+      - traefik.http.middlewares.sina.headers.SSLHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.sina.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.sina.headers.STSPreload=true
+      - traefik.http.routers.sina.middlewares=sina@docker
+    environment:
+      - NODE_ENV=production
+    networks:
+      - traefik_proxy-net
+    
+networks:
+  traefik_proxy-net:
+    external: true
