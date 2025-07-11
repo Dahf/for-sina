@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
-      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
-      - VITE_ALLOWED_EMAILS=${VITE_ALLOWED_EMAILS}
+      VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      VITE_ALLOWED_EMAILS: ${VITE_ALLOWED_EMAILS}
     image: sina
     restart: always
     labels:
