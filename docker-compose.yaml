@@ -3,6 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_ALLOWED_EMAILS=${VITE_ALLOWED_EMAILS}
     image: sina
     restart: always
     labels:
@@ -17,12 +21,10 @@ services:
       - traefik.http.middlewares.sina.headers.browserXSSFilter=true
       - traefik.http.middlewares.sina.headers.contentTypeNosniff=true
       - traefik.http.middlewares.sina.headers.forceSTSHeader=true
-      - traefik.http.middlewares.sina.headers.SSLHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.sina.headers.SSLHost=${DOMAIN_NAME:-sina.silasbeckmann.de}
       - traefik.http.middlewares.sina.headers.STSIncludeSubdomains=true
       - traefik.http.middlewares.sina.headers.STSPreload=true
       - traefik.http.routers.sina.middlewares=sina@docker
-    environment:
-      - NODE_ENV=production
     networks:
       - traefik_proxy-net
     
