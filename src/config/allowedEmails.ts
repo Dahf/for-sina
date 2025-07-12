@@ -1,6 +1,6 @@
 // Lade E-Mail-Adressen aus Umgebungsvariablen oder verwende Default-Werte
 const getEmailsFromEnv = (): string[] => {
-  const envEmails = import.meta.env.VITE_ALLOWED_EMAILS;
+  const envEmails = "sina.alker9@gmail.com,silasbeckmann1508@gmail.com";
   
   if (envEmails && typeof envEmails === 'string') {
     // Teile die kommagetrennte Liste auf und bereinige sie
