@@ -107,13 +107,24 @@
   margin-bottom: 0.5rem;
 }
 
+.date-range-separator {
+  color: #666;
+  margin: 0 0.5rem;
+}
+
+.date-end-value {
+  color: #218c4a;
+  font-weight: 600;
+}
+
 .recurring-info {
   color: #4fee8c;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   background: rgba(79, 238, 140, 0.1);
-  padding: 0.5rem;
-  border-radius: 8px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  display: inline-block;
   margin-top: 0.5rem;
 }
 
@@ -181,7 +192,7 @@
 }
 
 .timeline-content {
-  background: white;
+  background: var(--timeline-bg);
   border-radius: 16px;
   padding: 1rem;
   box-shadow: 0 4px 12px rgba(33, 140, 74, 0.1);
@@ -200,7 +211,7 @@
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-right: 8px solid white;
+  border-right: 8px solid var(--timeline-bg);
 }
 
 .timeline-actions {
@@ -341,7 +352,6 @@
   .date-description {
     font-size: 0.95rem;
   }
-  
   .timeline-view {
     max-width: 900px;
     margin: 2rem auto 0;
@@ -383,15 +393,6 @@
     padding: 1.5rem;
   }
   
-  .timeline-content::before {
-    right: -12px;
-    left: auto;
-    top: 1.5rem;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 12px solid white;
-    border-right: none;
-  }
   
   .timeline-item:nth-child(even) .timeline-content {
     margin-left: auto;
@@ -401,12 +402,25 @@
     margin-right: auto;
     margin-left: 0rem;
   }
+  .timeline-content::before {
+    right: -12px;
+    left: auto;
+    top: 1.5rem;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 12px solid var(--timeline-bg);
+    border-right: 12px solid var(--timeline-bg);
+  }
   
   .timeline-item:nth-child(even) .timeline-content::before {
     left: -12px;
     right: auto;
     border-left: none;
-    border-right: 12px solid white;
+  }
+  .timeline-item:nth-child(odd) .timeline-content::before {
+    right: -12px;
+    left: auto;
+    border-right: none;
   }
   
   .timeline-actions {

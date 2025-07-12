@@ -16,7 +16,7 @@ export function useDates() {
     try {
       setLoading(true);
       setError(null);
-      const loadedDates = await DatesService.getDates(user.id);
+      const loadedDates = await DatesService.getDates();
       setDates(loadedDates);
     } catch (err) {
       console.error('Fehler beim Laden der Dates:', err);
@@ -59,7 +59,7 @@ export function useDates() {
 
     try {
       setError(null);
-      const updatedDate = await DatesService.updateDate(dateId, updates, user.id);
+      const updatedDate = await DatesService.updateDate(dateId, updates);
       setDates(prev => prev.map(date => 
         date.id === dateId ? updatedDate : date
       ));
@@ -80,7 +80,7 @@ export function useDates() {
 
     try {
       setError(null);
-      await DatesService.deleteDate(dateId, user.id);
+      await DatesService.deleteDate(dateId);
       setDates(prev => prev.filter(date => date.id !== dateId));
       return true;
     } catch (err) {

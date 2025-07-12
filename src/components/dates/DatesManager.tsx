@@ -1,25 +1,60 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DateForm } from './DateForm';
 import './DatesManager.css';
 import { NextEventCard } from './NextEventCard';
 import { DatesList } from './DatesList';
+import { DateFilters, type SortOption } from './DateFilters';
+import { DateStatistics } from './DateStatistics';
 import { useDates } from '../../hooks/useDates';
 import { LoadingSpinner } from '../ui/LoadingSpinner';
+import NotificationSettings from './NotificationSettings';
+import CalendarView from './CalendarView';
+import CategoryColors from './CategoryColors';
+import { notificationService } from '../../services/notificationService';
 
 export interface DateEntry {
   id: string;
   title: string;
   date: string;
+  endDate?: string; // Optional für Bereichsauswahl
   description: string;
   category: 'anniversary' | 'birthday' | 'first' | 'vacation' | 'milestone' | 'other';
   isRecurring: boolean;
+  // Neue Felder für erweiterte Funktionen
+  tags: string[]; // Tags/Labels für bessere Organisation
+  priority: 'low' | 'medium' | 'high'; // Prioritätssystem
+  reminderDays: number[]; // Erinnerungen (Tage vorher)
+  recurringType: 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom'; // Erweiterte Wiederholungen
+  recurringInterval: number; // Intervall (z.B. alle 2 Jahre)
+  recurringEndDate?: string; // Wann soll Wiederholung enden
+  photos: string[]; // URLs zu Fotos/Medien
+  color?: string; // Benutzerdefinierte Farbe
+  createdAt: string;
+  updatedAt: string;
 }
 
 export function DatesManager() {
   const { dates, loading, error, createDate, updateDate, deleteDate } = useDates();
   const [showForm, setShowForm] = useState(false);
   const [editingDate, setEditingDate] = useState<DateEntry | null>(null);
-  const [viewMode, setViewMode] = useState<'cards' | 'timeline'>('cards');
+  const [viewMode, setViewMode] = useState<'cards' | 'timeline' | 'statistics' | 'calendar' | 'settings'>('cards');
+  const [filteredDates, setFilteredDates] = useState<DateEntry[]>([]);
+  const [currentSort, setCurrentSort] = useState<SortOption>('date-desc');
+  const [notificationPermission, setNotificationPermission] = useState({ granted: false, supported: false });
+
+  // Initialize notification service
+  useEffect(() => {
+    if (dates.length > 0) {
+      notificationService.startReminderCheck(dates);
+    }
+    
+    return () => {
+      notificationService.stopReminderCheck();
+    };
+  }, [dates]);
+
+  // Get unique categories from dates
+  const categories = [...new Set(dates.map(date => date.category))].filter(Boolean);
 
   // Handle save date from form
   const handleSaveDate = async (dateEntry: DateEntry) => {
@@ -102,6 +137,12 @@ export function DatesManager() {
         <NextEventCard dates={dates} />
       </div>
 
+      <DateFilters
+        dates={dates}
+        onFilteredDatesChange={setFilteredDates}
+        onSortChange={setCurrentSort}
+      />
+
       <div className="dates-controls">
         <button 
           className="add-date-btn"
@@ -123,18 +164,66 @@ export function DatesManager() {
           >
             📈 Timeline
           </button>
+          <button 
+            className={viewMode === 'statistics' ? 'active' : ''}
+            onClick={() => setViewMode('statistics')}
+          >
+            📊 Statistiken
+          </button>
+          <button 
+            className={viewMode === 'calendar' ? 'active' : ''}
+            onClick={() => setViewMode('calendar')}
+          >
+            📅 Kalender
+          </button>
+          <button 
+            className={viewMode === 'settings' ? 'active' : ''}
+            onClick={() => setViewMode('settings')}
+          >
+            ⚙️ Einstellungen
+          </button>
         </div>
       </div>
 
-      <DatesList 
-        dates={dates}
-        viewMode={viewMode}
-        onEditDate={(date) => {
-          setEditingDate(date);
-          setShowForm(true);
-        }}
-        onDeleteDate={handleDeleteDate}
-      />
+      {viewMode === 'statistics' && (
+        <DateStatistics dates={filteredDates.length > 0 ? filteredDates : dates} />
+      )}
+      
+      {viewMode === 'calendar' && (
+        <CalendarView 
+          dates={filteredDates.length > 0 ? filteredDates : dates}
+          onEventClick={(event) => {
+            setEditingDate(event);
+            setShowForm(true);
+          }}
+        />
+      )}
+      
+      {viewMode === 'settings' && (
+        <div className="settings-container">
+          <NotificationSettings 
+            onPermissionChange={setNotificationPermission}
+          />
+          <CategoryColors 
+            categories={categories}
+            onColorChange={(category, color) => {
+              console.log(`Category ${category} color changed to ${color}`);
+            }}
+          />
+        </div>
+      )}
+      
+      {(viewMode === 'cards' || viewMode === 'timeline') && (
+        <DatesList 
+          dates={filteredDates.length > 0 ? filteredDates : dates}
+          viewMode={viewMode as 'cards' | 'timeline'}
+          onEditDate={(date) => {
+            setEditingDate(date);
+            setShowForm(true);
+          }}
+          onDeleteDate={handleDeleteDate}
+        />
+      )}
 
       {showForm && (
         <DateForm

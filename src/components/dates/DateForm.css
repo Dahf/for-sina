@@ -237,7 +237,171 @@
   box-shadow: 0 4px 15px rgba(79, 238, 140, 0.4);
 }
 
-/* Mobile Styles */
+/* Prioritäten */
+.priority-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.priority-option {
+  cursor: pointer;
+}
+
+.priority-option input[type="radio"] {
+  display: none;
+}
+
+.priority-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 2px solid #b6e7c6;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.priority-card:hover {
+  border-color: #4fee8c;
+  background: #f0fff4;
+}
+
+.priority-card.selected {
+  border-color: #4fee8c;
+  background: #e6ffe6;
+  box-shadow: 0 2px 10px rgba(79, 238, 140, 0.2);
+}
+
+.priority-icon {
+  font-size: 1.2rem;
+}
+
+.priority-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #218c4a;
+}
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #4fee8c;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.tag-remove:hover {
+  color: #ffcccc;
+}
+
+.common-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-suggestion {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-suggestion:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+/* Erinnerungen */
+.reminders-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.reminder-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.reminder-option:hover {
+  background: #f0fff4;
+  border-color: #4fee8c;
+}
+
+.reminder-option input[type="checkbox"] {
+  accent-color: #4fee8c;
+}
+
+.reminder-label {
+  font-size: 0.8rem;
+  color: #218c4a;
+}
+
+/* Select Dropdown */
+.form-group select {
+  padding: 0.75rem;
+  border: 2px solid #b6e7c6;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Quicksand', Arial, Helvetica, sans-serif;
+  background: white;
+  color: #218c4a;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #4fee8c;
+  box-shadow: 0 0 0 3px rgba(79, 238, 140, 0.2);
+}
+
+/* Mobile Responsive */
 @media (max-width: 767px) {
   .form-overlay {
     padding: 0.5rem;
@@ -259,6 +423,18 @@
     -webkit-overflow-scrolling: touch;
     border-radius: 16px;
     position: relative;
+  }
+
+  .priority-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .reminders-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .common-tags {
+    justify-content: center;
   }
 }
 

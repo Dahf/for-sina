@@ -1,5 +1,7 @@
 import type { DateEntry } from './DatesManager';
 import './DatesList.css';
+import { LiveCountdown } from './LiveCountdown';
+import { getCategoryColor } from '../../utils/categoryColors';
 
 interface DatesListProps {
   dates: DateEntry[];
@@ -36,13 +38,16 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
     const diffYears = Math.floor(diffDays / 365);
     const diffMonths = Math.floor((diffDays % 365) / 30);
     const remainingDays = diffDays % 30;
-
+    let prefix = 'Vor';
+    if (diffDays < 0) {
+      prefix = 'In';
+    }
     if (diffYears > 0) {
-      return `Vor ${diffYears} Jahr${diffYears > 1 ? 'en' : ''}, ${diffMonths} Monat${diffMonths > 1 ? 'en' : ''}`;
+      return `${prefix} ${Math.abs(diffYears)} Jahr${Math.abs(diffYears) > 1 ? 'en' : ''}, ${Math.abs(diffMonths)} Monate`;
     } else if (diffMonths > 0) {
-      return `Vor ${diffMonths} Monat${diffMonths > 1 ? 'en' : ''}, ${remainingDays} Tag${remainingDays > 1 ? 'en' : ''}`;
+      return `${prefix} ${Math.abs(diffMonths)} Monate, ${Math.abs(remainingDays)} Tage`;
     } else {
-      return `Vor ${diffDays} Tag${diffDays > 1 ? 'en' : ''}`;
+      return `${prefix} ${Math.abs(diffDays)} Tag${Math.abs(diffDays) > 1 ? 'en' : ''}`;
     }
   };
 
@@ -87,8 +92,17 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
   if (viewMode === 'cards') {
     return (
       <div className="dates-grid">
-        {dates.map(date => (
-          <div key={date.id} className={`date-card ${date.category}`}>
+        {dates.map(date => {
+          const categoryColor = getCategoryColor(categoryNames[date.category]);
+          return (
+            <div 
+              key={date.id} 
+              className={`date-card ${date.category}`}
+              style={{
+                borderLeft: `4px solid ${categoryColor.color}`,
+                backgroundColor: `${categoryColor.color}10`
+              }}
+            >
             <div className="date-card-header">
               <span className="date-icon">{categoryIcons[date.category]}</span>
               <div className="date-info">
@@ -118,6 +132,18 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
                   month: 'long',
                   year: 'numeric'
                 })}
+                {date.endDate && (
+                  <>
+                    <span className="date-range-separator"> - </span>
+                    <span className="date-end-value">
+                      {new Date(date.endDate).toLocaleDateString('de-DE', {
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </>
+                )}
               </div>
               <div className="date-time-ago">
                 {calculateTimeDifference(date.date)}
@@ -127,6 +153,11 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
                   🔄 Wiederkehrend - {calculateCountdown(date.date, true)}
                 </div>
               )}
+              
+              <div className="live-countdown-container">
+                <LiveCountdown dateEntry={date} showSeconds={false} />
+              </div>
+             
             </div>
             
             {date.description && (
@@ -135,7 +166,8 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
               </div>
             )}
           </div>
-        ))}
+        );
+        })}
       </div>
     );
   }
@@ -146,12 +178,23 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
       <div className="timeline">
         {dates
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .map((date) => (
-            <div key={date.id} className={`timeline-item ${date.category}`}>
+          .map((date, index) => {
+            const categoryColor = getCategoryColor(categoryNames[date.category]);
+            return (
+              <div 
+                key={date.id} 
+                className={`timeline-item ${date.category}-${index}`}
+                
+              >
               <div className="timeline-marker">
                 <span className="timeline-icon">{categoryIcons[date.category]}</span>
               </div>
-              <div className="timeline-content">
+              <div className="timeline-content" 
+                style={{
+                 
+                  backgroundColor: `${categoryColor.color}20`,
+                  ...({ '--timeline-bg': `${categoryColor.color}20` } as React.CSSProperties)
+                }}>
                 <div className="timeline-actions">
                   <button 
                     className="edit-btn"
@@ -172,6 +215,18 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
                     month: 'long',
                     year: 'numeric'
                   })}
+                  {date.endDate && (
+                    <>
+                      <span className="date-range-separator"> - </span>
+                      <span className="date-end-value">
+                        {new Date(date.endDate).toLocaleDateString('de-DE', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <h4>{date.title}</h4>
                 <div className="timeline-category">{categoryNames[date.category]}</div>
@@ -183,7 +238,8 @@ export function DatesList({ dates, viewMode, onEditDate, onDeleteDate }: DatesLi
                 </div>
               </div>
             </div>
-          ))}
+          );
+          })}
       </div>
     </div>
   );

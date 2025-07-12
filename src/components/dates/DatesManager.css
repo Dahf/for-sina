@@ -30,6 +30,7 @@
 .dates-controls {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 2rem;
   width: 100%;
@@ -57,6 +58,7 @@
 
 .view-toggle {
   display: flex;
+  flex-wrap: wrap;
   background: white;
   border-radius: 12px;
   padding: 0.25rem;
@@ -64,6 +66,8 @@
   border: 2px solid #e6ffe6;
   align-self: center;
   width: fit-content;
+  gap: 0.25rem;
+  justify-content: center;
 }
 
 .view-toggle button {
@@ -81,6 +85,8 @@
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: fit-content;
 }
 
 .view-toggle button.active {
@@ -91,6 +97,31 @@
 
 .view-toggle button:hover:not(.active) {
   background: rgba(79, 238, 140, 0.1);
+}
+
+/* Settings Container */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+/* Mobile optimizations for view toggle */
+@media (max-width: 480px) {
+  .view-toggle {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .view-toggle button {
+    flex: 1 1 calc(50% - 0.125rem);
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    text-align: center;
+    justify-content: center;
+  }
 }
 
 /* Tablet Styles */
