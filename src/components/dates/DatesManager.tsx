@@ -39,8 +39,8 @@ export function DatesManager() {
   const [editingDate, setEditingDate] = useState<DateEntry | null>(null);
   const [viewMode, setViewMode] = useState<'cards' | 'timeline' | 'statistics' | 'calendar' | 'settings'>('cards');
   const [filteredDates, setFilteredDates] = useState<DateEntry[]>([]);
-  const [currentSort, setCurrentSort] = useState<SortOption>('date-desc');
-  const [notificationPermission, setNotificationPermission] = useState({ granted: false, supported: false });
+  const [, setCurrentSort] = useState<SortOption>('date-desc');
+  const [, setNotificationPermission] = useState({ granted: false, supported: false });
 
   // Initialize notification service
   useEffect(() => {
